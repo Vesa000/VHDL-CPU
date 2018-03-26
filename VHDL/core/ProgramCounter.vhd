@@ -49,7 +49,6 @@ architecture Behavioral of ProgramCounter is
 signal R_oldPC: STD_LOGIC_VECTOR (22 downto 0):="11111111111111111111111";
 signal w_curPC: STD_LOGIC_VECTOR (22 downto 0);
 signal w_isjump: STD_LOGIC := '0';
-signal w_shouldjump: STD_LOGIC := '0';
 
 signal w_pushStack: STD_LOGIC := '0';
 signal w_popStack: STD_LOGIC := '0';
@@ -94,26 +93,12 @@ begin
         w_isjump<= '0';
     end if;
     
-    --should jump
-    if((i_condition = "0000")                     --alw
-    or (i_condition = "0001" and I_status(0) ='1')--eq
-    or (i_condition = "0010" and I_status(0) ='0')--neq
-    or (i_condition = "0011" and I_status(1) ='1')--gt
-    --or (i_condition = "0100" and I_status(1) ='1')--geq
-    or (i_condition = "0101" and I_status(2) ='1')--lt
-    --or (i_condition = "0110" and I_status(1) ='1')--leq
-    ) then 
-        w_shouldjump <='1';
-    else
-        w_shouldjump<='0';
-    end if;
-    
     w_WriteStack <= R_oldPC;
     
-    if(w_shouldjump='1' and w_isjump='1') then
+    if(I_execute='1' and w_isjump='1') then
         if(i_opcode="01001") then--Return
             --pop stack
-            w_curPC <= w_ReadStack;
+            w_curPC <= std_logic_vector(to_unsigned(to_integer(unsigned(w_ReadStack))+1,23));-- point instruction after the branch
             w_popStack <= '1';
         else
             w_popStack <= '0';
