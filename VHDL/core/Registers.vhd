@@ -47,9 +47,13 @@ architecture Behavioral of Registers is
     type store_t is array (0 to 31) of STD_LOGIC_VECTOR(31 downto 0);
     signal regs: store_t := (others => X"00000000");
 begin
-    process(I_clk)
+    process(all)
     begin
-        if rising_edge(I_clk) then
+        if rising_edge(I_clk) then               
+            if(I_we = '1') then
+                regs(to_integer(unsigned(I_store))) <= I_data;
+            end if;
+        end if;
         
             --Write reg to O_dataA
             if(i_readA = "00000") then
@@ -64,10 +68,6 @@ begin
             else
                 O_dataB <= regs(to_integer(unsigned(I_readB)));
             end if;
-               
-            if(I_we = '1') then
-                regs(to_integer(unsigned(I_store))) <= I_data;
-            end if;
-        end if;
+
     end process;
 end Behavioral;

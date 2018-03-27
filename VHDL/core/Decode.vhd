@@ -22,6 +22,9 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
+library work;
+use work.cpu_constants.all;
+
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -60,18 +63,21 @@ if(rising_edge(I_clk) and I_enable='1') then
     R_execute<= I_execute;
     R_opcode<= I_opcode;
 end if;
+end process;
 
+process(all)
+begin
 O_execute <= R_execute;
 O_operands<=R_operands;
 O_opcode<=R_opcode;
 
-if(R_opcode="00011" or R_opcode="00100" or R_opcode="01010") then
+if(R_opcode=OPCODE_STR or R_opcode=OPCODE_MOV or R_opcode=OPCODE_ALU) then
     O_readA<=R_operands(22 downto 18);
 else
     O_readA<="00000";
 end if;
 
-if(R_opcode="00100" or R_opcode="01010") then
+if(R_opcode=OPCODE_MOV or R_opcode=OPCODE_ALU) then
     O_readB<=R_operands(17 downto 13);
 else
     O_readB<="00000";
