@@ -42,7 +42,7 @@ entity CPU is
            Debug_pause: buffer STD_LOGIC;
            Debug_pc : buffer STD_LOGIC_VECTOR (22 downto 0);
            
-           Debug_instruction : in STD_LOGIC_VECTOR (31 downto 0);
+           Debug_instruction : buffer STD_LOGIC_VECTOR (31 downto 0);
            
            Debug_FD_execute : buffer STD_LOGIC;
            Debug_FD_opcode : buffer STD_LOGIC_VECTOR (4 downto 0);
@@ -86,7 +86,8 @@ signal W_DE_operands : STD_LOGIC_VECTOR (22 downto 0);
 signal W_EW_execute : STD_LOGIC;
 signal W_EW_address : STD_LOGIC_VECTOR (4 downto 0);
 signal W_EW_data : STD_LOGIC_VECTOR (31 downto 0);
-           
+
+--Registers           
 signal W_R_store    : STD_LOGIC;
 signal W_R_data  :  STD_LOGIC_VECTOR (31 downto 0);
 signal W_R_dataA : STD_LOGIC_VECTOR (31 downto 0);
@@ -94,6 +95,16 @@ signal W_R_dataB : STD_LOGIC_VECTOR (31 downto 0);
 signal W_R_storeaddr : STD_LOGIC_VECTOR (4 downto 0);
 signal W_R_readA : STD_LOGIC_VECTOR (4 downto 0);
 signal W_R_readB : STD_LOGIC_VECTOR (4 downto 0);
+
+--Block Ram
+signal W_BR_Aaddr: STD_LOGIC_VECTOR ( 12 downto 0 );
+signal W_BR_Ain: STD_LOGIC_VECTOR ( 31 downto 0 );
+signal W_BR_Aout:STD_LOGIC_VECTOR ( 31 downto 0 );
+signal W_BR_Awe:STD_LOGIC_VECTOR ( 0 downto 0 ):="0";
+signal W_BR_Baddr:STD_LOGIC_VECTOR ( 12 downto 0 );
+signal W_BR_Bin:STD_LOGIC_VECTOR ( 31 downto 0 );
+signal W_BR_Bout:STD_LOGIC_VECTOR ( 31 downto 0 );
+signal W_BR_Bwe:STD_LOGIC_VECTOR ( 0 downto 0 ):="0";
 
 component Fetch port(
            I_clk : in STD_LOGIC;
@@ -162,6 +173,19 @@ component Registers port(
            I_readB : in STD_LOGIC_VECTOR (4 downto 0));
 end component;
 
+component BlockRam port(
+           BRAM_PORTA_0_addr : in STD_LOGIC_VECTOR ( 12 downto 0 );
+           BRAM_PORTA_0_clk : in STD_LOGIC;
+           BRAM_PORTA_0_din : in STD_LOGIC_VECTOR ( 31 downto 0 );
+           BRAM_PORTA_0_dout : out STD_LOGIC_VECTOR ( 31 downto 0 );
+           BRAM_PORTA_0_we : in STD_LOGIC_VECTOR ( 0 to 0 );
+           BRAM_PORTB_0_addr : in STD_LOGIC_VECTOR ( 12 downto 0 );
+           BRAM_PORTB_0_clk : in STD_LOGIC;
+           BRAM_PORTB_0_din : in STD_LOGIC_VECTOR ( 31 downto 0 );
+           BRAM_PORTB_0_dout : out STD_LOGIC_VECTOR ( 31 downto 0 );
+           BRAM_PORTB_0_we : in STD_LOGIC_VECTOR ( 0 to 0 ));
+end component;
+
 begin
 
 FetchStage: Fetch port map(
@@ -225,6 +249,18 @@ Registers32: Registers port map(
                         I_store=>W_R_storeaddr,
                         I_readA=>W_R_readA,
                         I_readB=>W_R_readB);
+ 
+ Bram: BlockRam port map(
+                        BRAM_PORTA_0_addr => W_pc,
+                        BRAM_PORTA_0_clk=> I_clk,
+                        BRAM_PORTA_0_din=> W_BR_Ain, 
+                        BRAM_PORTA_0_dout=> W_instruction, 
+                        BRAM_PORTA_0_we=> W_BR_Awe, 
+                        BRAM_PORTB_0_addr=> W_BR_Baddr, 
+                        BRAM_PORTB_0_clk=> I_clk, 
+                        BRAM_PORTB_0_din=> W_BR_Bin, 
+                        BRAM_PORTB_0_dout=> W_BR_Bout,
+                        BRAM_PORTB_0_we=> W_BR_Bwe);                       
  
  DEBUGPROCESS: process(all)
  begin

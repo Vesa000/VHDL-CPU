@@ -98,58 +98,58 @@ begin
     -- Put initialisation code here
   I_enable<='1';
   I_reset<='0';
-  Debug_instruction<=(others=>'0');
+--  Debug_instruction<=(others=>'0');
   -- Put test bench stimulus code here
   
-  --LOAD to reg1
-  Debug_instruction(IFO_OPCODE_BEGIN downto IFO_OPCODE_END)<=OPCODE_LDV;
-  Debug_instruction(IFO_REGA_BEGIN downto IFO_REGA_END)<= "00001";
-  Debug_instruction(IFO_VAL_BEGIN downto IFO_VAL_END)<="011111111111111111";
-  wait for clock_period;
+--  --LOAD to reg1
+--  Debug_instruction(IFO_OPCODE_BEGIN downto IFO_OPCODE_END)<=OPCODE_LDV;
+--  Debug_instruction(IFO_REGA_BEGIN downto IFO_REGA_END)<= "00001";
+--  Debug_instruction(IFO_VAL_BEGIN downto IFO_VAL_END)<="011111111111111111";
+--  wait for clock_period;
   
-  Debug_instruction<=(others=>'0');
-  wait for clock_period*0;
+--  Debug_instruction<=(others=>'0');
+--  wait for clock_period*0;
   
-  --LOAD to reg2
-  Debug_instruction(IFO_OPCODE_BEGIN downto IFO_OPCODE_END)<=OPCODE_LDV;
-  Debug_instruction(IFO_REGA_BEGIN downto IFO_REGA_END)<= "00010";
-  Debug_instruction(IFO_VAL_BEGIN downto IFO_VAL_END)<="000000000000000001";
-  wait for clock_period;
+--  --LOAD to reg2
+--  Debug_instruction(IFO_OPCODE_BEGIN downto IFO_OPCODE_END)<=OPCODE_LDV;
+--  Debug_instruction(IFO_REGA_BEGIN downto IFO_REGA_END)<= "00010";
+--  Debug_instruction(IFO_VAL_BEGIN downto IFO_VAL_END)<="000000000000000001";
+--  wait for clock_period;
   
-  Debug_instruction<=(others=>'0');
-  wait for clock_period*0;
+--  Debug_instruction<=(others=>'0');
+--  wait for clock_period*0;
  
-  --ADD R1+R2 => R3
-  Debug_instruction(IFO_OPCODE_BEGIN downto IFO_OPCODE_END)<=OPCODE_ALU;
-  Debug_instruction(IFO_REGA_BEGIN downto IFO_REGA_END)<= "00001";
-  Debug_instruction(IFO_REGB_BEGIN downto IFO_REGB_END)<= "00010";
-  Debug_instruction(IFO_REGQ_BEGIN downto IFO_REGQ_END)<= "00011";
-  Debug_instruction(IFO_ALUINS_BEGIN downto IFO_ALUINS_END)<=ALUCODE_ADD;
-  wait for clock_period;
+--  --ADD R1+R2 => R3
+--  Debug_instruction(IFO_OPCODE_BEGIN downto IFO_OPCODE_END)<=OPCODE_ALU;
+--  Debug_instruction(IFO_REGA_BEGIN downto IFO_REGA_END)<= "00001";
+--  Debug_instruction(IFO_REGB_BEGIN downto IFO_REGB_END)<= "00010";
+--  Debug_instruction(IFO_REGQ_BEGIN downto IFO_REGQ_END)<= "00011";
+--  Debug_instruction(IFO_ALUINS_BEGIN downto IFO_ALUINS_END)<=ALUCODE_ADD;
+--  wait for clock_period;
   
-  Debug_instruction<=(others=>'0');
-  wait for clock_period*0;
+--  Debug_instruction<=(others=>'0');
+--  wait for clock_period*0;
  
-  --CMP R3>R2?
-  Debug_instruction(IFO_OPCODE_BEGIN downto IFO_OPCODE_END)<=OPCODE_ALU;
-  Debug_instruction(IFO_REGA_BEGIN downto IFO_REGA_END)<= "00011";
-  Debug_instruction(IFO_REGB_BEGIN downto IFO_REGB_END)<= "00010";
-  Debug_instruction(IFO_REGQ_BEGIN downto IFO_REGQ_END)<= "00000";
-  Debug_instruction(IFO_ALUINS_BEGIN downto IFO_ALUINS_END)<=ALUCODE_CMP;
-  wait for clock_period;
+--  --CMP R3>R2?
+--  Debug_instruction(IFO_OPCODE_BEGIN downto IFO_OPCODE_END)<=OPCODE_ALU;
+--  Debug_instruction(IFO_REGA_BEGIN downto IFO_REGA_END)<= "00011";
+--  Debug_instruction(IFO_REGB_BEGIN downto IFO_REGB_END)<= "00010";
+--  Debug_instruction(IFO_REGQ_BEGIN downto IFO_REGQ_END)<= "00000";
+--  Debug_instruction(IFO_ALUINS_BEGIN downto IFO_ALUINS_END)<=ALUCODE_CMP;
+--  wait for clock_period;
    
-  Debug_instruction<=(others=>'0');
-  wait for clock_period*3;
+--  Debug_instruction<=(others=>'0');
+--  wait for clock_period*3;
  
-  --JMP
-  Debug_instruction(IFO_COND_BEGIN downto IFO_COND_END)<=COND_GT;
-  Debug_instruction(IFO_OPCODE_BEGIN downto IFO_OPCODE_END)<=OPCODE_JMP;
-  Debug_instruction(IFO_PC_BEGIN downto IFO_PC_END)<= "00000000000000000001111";
-  wait for clock_period;
+--  --JMP
+--  Debug_instruction(IFO_COND_BEGIN downto IFO_COND_END)<=COND_GT;
+--  Debug_instruction(IFO_OPCODE_BEGIN downto IFO_OPCODE_END)<=OPCODE_JMP;
+--  Debug_instruction(IFO_PC_BEGIN downto IFO_PC_END)<= "00000000000000000001111";
+--  wait for clock_period;
   
-  Debug_instruction<=(others=>'0');
-  wait for clock_period*5;
-  
+--  Debug_instruction<=(others=>'0');
+--  wait for clock_period*5;
+  wait for clock_period*10;
   stop_the_clock <= true;
   wait;
 end process;
