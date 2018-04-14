@@ -73,8 +73,11 @@ constant STATUS_EQ: integer := 0;
 constant STATUS_GT: integer := 1;
 constant STATUS_LT: integer := 2;
 
-end cpu_constants;
 
+-- Memory mappings
+constant MEM_RAM_START: integer := 511;
+constant MEM_PROGRAM_START: integer := 511;
+
+end cpu_constants;
 package body cpu_constants is
- 
 end cpu_constants;
