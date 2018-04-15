@@ -1,0 +1,5 @@
+C:\Users\Vesa\OneDrive\logisim\Logisim32BitComputer\Logisim32BitComputer\Source\Assembler\bin\Release\Assembler.exe.config
+C:\Users\Vesa\OneDrive\logisim\Logisim32BitComputer\Logisim32BitComputer\Source\Assembler\bin\Release\Assembler.exe
+C:\Users\Vesa\OneDrive\logisim\Logisim32BitComputer\Logisim32BitComputer\Source\Assembler\bin\Release\Assembler.pdb
+C:\Users\Vesa\OneDrive\logisim\Logisim32BitComputer\Logisim32BitComputer\Source\Assembler\obj\Release\Assembler.exe
+C:\Users\Vesa\OneDrive\logisim\Logisim32BitComputer\Logisim32BitComputer\Source\Assembler\obj\Release\Assembler.pdb

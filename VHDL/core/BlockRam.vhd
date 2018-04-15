@@ -1,58 +1,98 @@
---Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
-----------------------------------------------------------------------------------
---Tool Version: Vivado v.2017.4 (win64) Build 2086221 Fri Dec 15 20:55:39 MST 2017
---Date        : Thu Mar 29 00:04:05 2018
---Host        : DESKTOP-82RUIP1 running 64-bit major release  (build 9200)
---Command     : generate_target BramBlock_wrapper.bd
---Design      : BramBlock_wrapper
---Purpose     : IP block netlist
-----------------------------------------------------------------------------------
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-library UNISIM;
-use UNISIM.VCOMPONENTS.ALL;
-entity BlockRam is
-  port (
-    BRAM_PORTA_0_addr : in STD_LOGIC_VECTOR ( 12 downto 0 );
-    BRAM_PORTA_0_clk : in STD_LOGIC;
-    BRAM_PORTA_0_din : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    BRAM_PORTA_0_dout : out STD_LOGIC_VECTOR ( 31 downto 0 );
-    BRAM_PORTA_0_we : in STD_LOGIC_VECTOR ( 0 to 0 );
-    BRAM_PORTB_0_addr : in STD_LOGIC_VECTOR ( 12 downto 0 );
-    BRAM_PORTB_0_clk : in STD_LOGIC;
-    BRAM_PORTB_0_din : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    BRAM_PORTB_0_dout : out STD_LOGIC_VECTOR ( 31 downto 0 );
-    BRAM_PORTB_0_we : in STD_LOGIC_VECTOR ( 0 to 0 )
-  );
-end BlockRam;
+library ieee;
+use ieee.std_logic_1164.all;
+use IEEE.NUMERIC_STD.ALL;
 
-architecture STRUCTURE of BlockRam is
-  component BramBlock is
-  port (
-    BRAM_PORTA_0_addr : in STD_LOGIC_VECTOR ( 12 downto 0 );
-    BRAM_PORTA_0_clk : in STD_LOGIC;
-    BRAM_PORTA_0_din : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    BRAM_PORTA_0_dout : out STD_LOGIC_VECTOR ( 31 downto 0 );
-    BRAM_PORTA_0_we : in STD_LOGIC_VECTOR ( 0 to 0 );
-    BRAM_PORTB_0_addr : in STD_LOGIC_VECTOR ( 12 downto 0 );
-    BRAM_PORTB_0_clk : in STD_LOGIC;
-    BRAM_PORTB_0_din : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    BRAM_PORTB_0_dout : out STD_LOGIC_VECTOR ( 31 downto 0 );
-    BRAM_PORTB_0_we : in STD_LOGIC_VECTOR ( 0 to 0 )
-  );
-  end component BramBlock;
+use std.textio.all;
+
+library work;
+use work.cpu_constants.all;
+
+entity BlockRam is
+generic (
+	WIDTHA : integer := 32;
+	SIZEA : integer := 30000;
+	ADDRWIDTHA : integer := 16;
+	WIDTHB : integer := 32;
+	SIZEB : integer := 30000;
+	ADDRWIDTHB : integer := 16
+	);
+
+port (
+	clkA : in std_logic;
+	clkB : in std_logic;
+	enA : in std_logic;
+	enB : in std_logic;
+	weA : in std_logic;
+	weB : in std_logic;
+	addrA : in std_logic_vector(ADDRWIDTHA-1 downto 0);
+	I_MemAddress : in std_logic_vector(31 downto 0);
+	diA : in std_logic_vector(31 downto 0);
+	diB : in std_logic_vector(31 downto 0);
+	doA : out std_logic_vector(31 downto 0);
+	doB : out std_logic_vector(31 downto 0)
+	);
+end BlockRam;
+architecture behavioral of BlockRam is
+
+type ramType is array (0 to SIZEA-1) of std_logic_vector(WIDTHA-1 downto 0);
+
+
+impure function InitRamFromFile (RamFileName : in string) return RamType is
+FILE RamFile : text is in RamFileName;
+variable RamFileLine : line;
+variable RAM : RamType;
 begin
-BramBlock_i: component BramBlock
-     port map (
-      BRAM_PORTA_0_addr(12 downto 0) => BRAM_PORTA_0_addr(12 downto 0),
-      BRAM_PORTA_0_clk => BRAM_PORTA_0_clk,
-      BRAM_PORTA_0_din(31 downto 0) => BRAM_PORTA_0_din(31 downto 0),
-      BRAM_PORTA_0_dout(31 downto 0) => BRAM_PORTA_0_dout(31 downto 0),
-      BRAM_PORTA_0_we(0) => BRAM_PORTA_0_we(0),
-      BRAM_PORTB_0_addr(12 downto 0) => BRAM_PORTB_0_addr(12 downto 0),
-      BRAM_PORTB_0_clk => BRAM_PORTB_0_clk,
-      BRAM_PORTB_0_din(31 downto 0) => BRAM_PORTB_0_din(31 downto 0),
-      BRAM_PORTB_0_dout(31 downto 0) => BRAM_PORTB_0_dout(31 downto 0),
-      BRAM_PORTB_0_we(0) => BRAM_PORTB_0_we(0)
-    );
-end STRUCTURE;
+	for I in RamType'range loop
+		readline (RamFile, RamFileLine);
+		read (RamFileLine, RAM(I));
+	end loop;
+	return RAM;
+end InitRamFromFile;
+signal ram : ramType := InitRamFromFile("C:/Users/Vesa/Documents/FPGA/VHDL-Processor/Programs/Program.data");
+
+
+
+signal readA : std_logic_vector(WIDTHA-1 downto 0):= (others => '0');
+signal readB : std_logic_vector(WIDTHB-1 downto 0):= (others => '0');
+signal regA  : std_logic_vector(WIDTHA-1 downto 0):= (others => '0');
+signal regB  : std_logic_vector(WIDTHB-1 downto 0):= (others => '0');
+
+signal addrB : std_logic_vector(WIDTHB-1 downto 0):= (others => '0');
+
+begin
+
+process (clkA,clkB)
+begin
+	if rising_edge(clkA) then
+		if enA = '1' then
+			if weA = '1' then
+				ram(to_integer(unsigned(addrA))) <= diA;
+			end if;
+			readA <= ram(to_integer(unsigned(addrA)));
+		end if;
+		regA <= readA;
+	end if;
+	if rising_edge(clkB) then
+		if enB = '1' then
+			if weB = '1' then
+				ram(to_integer(unsigned(addrB)))<= diB;
+			end if;
+			readB <= ram(to_integer(unsigned(addrB)));
+		end if;
+		regB <= readB;
+	end if;
+end process;
+
+process(all)
+begin
+	doA <= regA;
+	doB <= regB;
+
+if(unsigned(I_MemAddress)>to_unsigned(MEM_RAM_START,32)) then
+		addrB <= STD_LOGIC_VECTOR(unsigned(I_MemAddress) + to_unsigned(MEM_RAM_START,32));
+	else
+		addrB<= (others => '0');
+end if;
+end process;
+
+end behavioral;

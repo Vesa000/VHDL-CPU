@@ -36,14 +36,14 @@ entity PCstack is
            I_reset : in STD_LOGIC;
            I_push : in STD_LOGIC;
            I_pop : in STD_LOGIC;
-           I_data : in STD_LOGIC_VECTOR (22 downto 0);
-           O_data : out STD_LOGIC_VECTOR (22 downto 0);
+           I_data : in STD_LOGIC_VECTOR (15 downto 0);
+           O_data : out STD_LOGIC_VECTOR (15 downto 0);
            O_sp : out integer);
 end PCstack;
 
 architecture Behavioral of PCstack is
 
-type mem_type is array (0 to 255) of std_logic_vector(22 downto 0);
+type mem_type is array (0 to 255) of std_logic_vector(15 downto 0);
 signal stack_mem : mem_type := (others => (others => '0'));
 signal full,empty : std_logic := '0';
 signal prev_PP : std_logic := '0';

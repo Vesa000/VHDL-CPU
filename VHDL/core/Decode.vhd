@@ -57,6 +57,6 @@ begin
 	else
 		O_readB<="00000";
 	end if;
-
 end process;
+
 end Behavioral;

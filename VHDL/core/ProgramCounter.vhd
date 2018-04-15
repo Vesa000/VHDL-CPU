@@ -40,28 +40,28 @@ entity ProgramCounter is
            I_execute : in STD_LOGIC;
            I_opcode : in STD_LOGIC_VECTOR (4 downto 0);
            I_operands : in STD_LOGIC_VECTOR (22 downto 0);
-           O_pc : out STD_LOGIC_VECTOR (22 downto 0));
+           O_pc : out STD_LOGIC_VECTOR (15 downto 0));
            
 end ProgramCounter;
 
 architecture Behavioral of ProgramCounter is
 
-signal R_oldPC: STD_LOGIC_VECTOR (22 downto 0):="11111111111111111111111";
-signal w_curPC: STD_LOGIC_VECTOR (22 downto 0);
+signal R_oldPC: STD_LOGIC_VECTOR (15 downto 0):="1111111111111111";
+signal w_curPC: STD_LOGIC_VECTOR (15 downto 0);
 signal w_isjump: STD_LOGIC := '0';
 
 signal w_pushStack: STD_LOGIC := '0';
 signal w_popStack: STD_LOGIC := '0';
-signal w_ReadStack: STD_LOGIC_VECTOR (22 downto 0);
-signal w_WriteStack: STD_LOGIC_VECTOR (22 downto 0);
+signal w_ReadStack: STD_LOGIC_VECTOR (15 downto 0);
+signal w_WriteStack: STD_LOGIC_VECTOR (15 downto 0);
 
 component PCstack port(
            I_clk : in STD_LOGIC;
            I_reset : in STD_LOGIC;
            I_push : in STD_LOGIC;
            I_pop : in STD_LOGIC;
-           I_data : in STD_LOGIC_VECTOR (22 downto 0);
-           O_data : out STD_LOGIC_VECTOR (22 downto 0);
+           I_data : in STD_LOGIC_VECTOR (15 downto 0);
+           O_data : out STD_LOGIC_VECTOR (15 downto 0);
            O_sp : out integer
            );
 end component;
@@ -98,11 +98,11 @@ begin
     if(I_execute='1' and w_isjump='1') then
         if(i_opcode="01001") then--Return
             --pop stack
-            w_curPC <= std_logic_vector(to_unsigned(to_integer(unsigned(w_ReadStack))+1,23));-- point instruction after the branch
+            w_curPC <= std_logic_vector(to_unsigned(to_integer(unsigned(w_ReadStack))+1,16));-- point instruction after the branch
             w_popStack <= '1';
         else
             w_popStack <= '0';
-            w_curPC <= I_operands(22 downto 0);
+            w_curPC <= I_operands(15 downto 0);
             if(i_opcode="01000") then--Branch
                 --push stack
                 w_pushStack <= '1';
@@ -111,9 +111,7 @@ begin
             end if;
         end if;
     else
-        w_curPC <= std_logic_vector(to_unsigned(to_integer(unsigned( R_oldPC )) + 1, 23));
-        --w_curPC <= R_oldPC + X"00000001";
-        --w_curPC <= R_oldPC + 1;
+        w_curPC <= std_logic_vector(to_unsigned(to_integer(unsigned( R_oldPC )) + 1, 16));
     end if;
     
     O_pc <= w_curPC;

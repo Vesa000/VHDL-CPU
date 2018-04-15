@@ -10,7 +10,7 @@ entity CPU is
 		
 		Debug_status : buffer STD_LOGIC_VECTOR (7 downto 0);
 		Debug_pause: buffer STD_LOGIC;
-		Debug_pc : buffer STD_LOGIC_VECTOR (22 downto 0);
+		Debug_pc : buffer STD_LOGIC_VECTOR (15 downto 0);
 		 
 		Debug_instruction : buffer STD_LOGIC_VECTOR (31 downto 0);
 		
@@ -40,7 +40,7 @@ architecture Behavioral of CPU is
 
 signal W_status : STD_LOGIC_VECTOR (7 downto 0);
 signal W_pause: STD_LOGIC;
-signal W_pc : STD_LOGIC_VECTOR (22 downto 0);
+signal W_pc : STD_LOGIC_VECTOR (15 downto 0);
 
 signal W_instruction : STD_LOGIC_VECTOR (31 downto 0);
 		   
@@ -71,11 +71,11 @@ signal W_BR_Ain: STD_LOGIC_VECTOR ( 31 downto 0 );
 signal W_BR_Aout:STD_LOGIC_VECTOR ( 31 downto 0 );
 signal W_BR_Awe:STD_LOGIC_VECTOR ( 0 downto 0 ):="0";
 
-signal W_MemAddr:STD_LOGIC_VECTOR ( 12 downto 0 );
+signal W_MemAddr:STD_LOGIC_VECTOR ( 31 downto 0 );
 signal W_MemStoreData:STD_LOGIC_VECTOR ( 31 downto 0 );
 signal W_MemReadData:STD_LOGIC_VECTOR ( 31 downto 0 );
-signal W_MemStore:STD_LOGIC_VECTOR ( 0 downto 0 ):="0";
-signal W_MemRead:STD_LOGIC_VECTOR ( 0 downto 0 ):="0";
+signal W_MemStore:STD_LOGIC:='0';
+signal W_MemRead:STD_LOGIC :='0';
 
 component Fetch port(
 		   I_clk : in STD_LOGIC;
@@ -87,7 +87,7 @@ component Fetch port(
 		   O_execute : out STD_LOGIC;
 		   O_opcode : out STD_LOGIC_VECTOR (4 downto 0);
 		   O_operands : out STD_LOGIC_VECTOR (22 downto 0);
-		   O_pc : out STD_LOGIC_VECTOR (22 downto 0));
+		   O_pc : out STD_LOGIC_VECTOR (15 downto 0));
 end component;
 
 component Decode port(
@@ -152,16 +152,18 @@ component Registers port(
 end component;
 
 component BlockRam port(
-		   BRAM_PORTA_0_addr : in STD_LOGIC_VECTOR ( 12 downto 0 );
-		   BRAM_PORTA_0_clk : in STD_LOGIC;
-		   BRAM_PORTA_0_din : in STD_LOGIC_VECTOR ( 31 downto 0 );
-		   BRAM_PORTA_0_dout : out STD_LOGIC_VECTOR ( 31 downto 0 );
-		   BRAM_PORTA_0_we : in STD_LOGIC_VECTOR ( 0 to 0 );
-		   BRAM_PORTB_0_addr : in STD_LOGIC_VECTOR ( 12 downto 0 );
-		   BRAM_PORTB_0_clk : in STD_LOGIC;
-		   BRAM_PORTB_0_din : in STD_LOGIC_VECTOR ( 31 downto 0 );
-		   BRAM_PORTB_0_dout : out STD_LOGIC_VECTOR ( 31 downto 0 );
-		   BRAM_PORTB_0_we : in STD_LOGIC_VECTOR ( 0 to 0 ));
+	clkA : in std_logic;
+	clkB : in std_logic;
+	enA : in std_logic;
+	enB : in std_logic;
+	weA : in std_logic;
+	weB : in std_logic;
+	addrA : in std_logic_vector(15 downto 0);
+	I_MemAddress : in std_logic_vector(31 downto 0);
+	diA : in  std_logic_vector(31 downto 0);
+	diB : in  std_logic_vector(31 downto 0);
+	doA : out std_logic_vector(31 downto 0);
+	doB : out std_logic_vector(31 downto 0));
 end component;
 
 begin
@@ -176,7 +178,7 @@ FetchStage: Fetch port map(
 						O_execute => W_FD_execute,
 						O_opcode=>W_FD_opcode,
 						O_operands=>W_FD_operands,
-						O_pc=> W_pc);
+						O_pc => W_pc);
 						
 DecodeStage: Decode port map(
 						I_clk => I_clk,
@@ -210,8 +212,8 @@ ExecuteStage: Execute port map(
 						O_memAddress=> W_MemAddr,
 						O_memStoreData =>W_MemStoreData,
 						O_memStore => W_MemStore,
-						O_memRead : W_MemRead,
-						I_memReadData : W_MemReadData
+						O_memRead => W_MemRead,
+						I_memReadData => W_MemReadData
 						);
 
 WriteBackStage: WriteBack port map(
@@ -236,26 +238,26 @@ Registers32: Registers port map(
 						I_readB=>W_R_readB);
  
  Bram: BlockRam port map(
-						BRAM_PORTA_0_addr => W_pc,
-						BRAM_PORTA_0_clk=> I_clk,
-						BRAM_PORTA_0_din=> W_BR_Ain, 
-						BRAM_PORTA_0_dout=> W_instruction, 
-						BRAM_PORTA_0_we=> W_BR_Awe,
-
-						BRAM_PORTB_0_addr=> W_MemAddr, 
-						BRAM_PORTB_0_clk=> I_clk, 
-						BRAM_PORTB_0_din=> W_MemStoreData, 
-						BRAM_PORTB_0_dout=> W_MemReadData,
-						BRAM_PORTB_0_we=> W_MemStore);                       
- 
+ 	clkA => I_clk,
+	clkB => I_clk,
+	enA => I_enable,
+	enB => I_enable,
+	weA => W_BR_Awe(0),
+	weB => W_MemStore,
+	addrA => W_pc,
+	I_MemAddress => W_MemAddr, 
+	diA => W_BR_Ain, 
+	diB => W_MemStoreData, 
+	doA => W_instruction, 
+	doB => W_MemReadData);  
  DEBUGPROCESS: process(all)
  begin
 			   
  	Debug_status<=W_status;
  	Debug_pause<=W_pause;
 	Debug_pc<=W_pc;
-	 
-	W_instruction<=Debug_instruction;
+	
+	Debug_instruction<=W_instruction;
 	 
 	Debug_FD_execute<=W_FD_execute;
 	Debug_FD_opcode<=W_FD_opcode;

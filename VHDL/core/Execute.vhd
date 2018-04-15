@@ -117,8 +117,8 @@ begin
 
 				O_memAddress <= (others => '0');
 				O_memStoreData <= (others => '0');
-				O_memStore : (others => '0');
-				O_memRead : (others => '0');
+				O_memStore <= '0';
+				O_memRead <= '0';
 				
 			--load ram    
 			when OPCODE_LDR =>
@@ -128,10 +128,10 @@ begin
 				O_pausePrevious<='0';
 				R_halt<= '0';
 
-				O_memAddress <= R_operands(IFO_ADDR_BEGIN downto IFO_ADDR_END);
+				O_memAddress(17 downto 0) <= R_operands(IFO_ADDR_BEGIN downto IFO_ADDR_END);
 				O_memStoreData <= (others => '0');
-				O_memStore : '0';
-				O_memRead : '1';
+				O_memStore <= '0';
+				O_memRead <= '1';
 
 			--store reg
 			when OPCODE_STR =>
@@ -141,10 +141,10 @@ begin
 				O_pausePrevious<='0';
 				R_halt<= '0';
 
-				O_memAddress <= R_operands(IFO_ADDR_BEGIN downto IFO_ADDR_END);
+				O_memAddress(17 downto 0) <= R_operands(IFO_ADDR_BEGIN downto IFO_ADDR_END);
 				O_memStoreData <= R_regDataA;
-				O_memStore : '1';
-				O_memRead : '0'
+				O_memStore <= '1';
+				O_memRead <= '0';
 
 			--move reg
 			when OPCODE_MOV =>
@@ -156,16 +156,16 @@ begin
 
 				O_memAddress <= (others => '0');
 				O_memStoreData <= (others => '0');
-				O_memStore : (others => '0');
-				O_memRead : (others => '0');
+				O_memStore <= '0';
+				O_memRead <= '0';
 				
 			--alu
 			when OPCODE_ALU =>
 
 				O_memAddress <= (others => '0');
 				O_memStoreData <= (others => '0');
-				O_memStore : (others => '0');
-				O_memRead : (others => '0');
+				O_memStore <='0';
+				O_memRead <= '0';
 
 				case R_operands(IFO_ALUINS_BEGIN downto IFO_ALUINS_END) is
 				
@@ -234,8 +234,8 @@ begin
 
 				O_memAddress <= (others => '0');
 				O_memStoreData <= (others => '0');
-				O_memStore : (others => '0');
-				O_memRead : (others => '0');
+				O_memStore <= '0';
+				O_memRead <= '0';
 				
 			--halt
 			when OPCODE_HLT =>
@@ -247,8 +247,8 @@ begin
 
 				O_memAddress <= (others => '0');
 				O_memStoreData <= (others => '0');
-				O_memStore : (others => '0');
-				O_memRead : (others => '0');
+				O_memStore <='0';
+				O_memRead <= '0';
 				
 			when others =>
 				O_data   <= (others => '0');
@@ -259,8 +259,8 @@ begin
 
 				O_memAddress <= (others => '0');
 				O_memStoreData <= (others => '0');
-				O_memStore : (others => '0');
-				O_memRead : (others => '0');
+				O_memStore <='0';
+				O_memRead <= '0';
 							
 			end case;
 
@@ -273,8 +273,8 @@ begin
 
 			O_memAddress <= (others => '0');
 			O_memStoreData <= (others => '0');
-			O_memStore : (others => '0');
-			O_memRead : (others => '0');
+			O_memStore <='0';
+			O_memRead <= '0';
 		end if;
 end process;
 end Behavioral;

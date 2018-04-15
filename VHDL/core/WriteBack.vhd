@@ -9,7 +9,6 @@ entity WriteBack is
 		I_enable : in STD_LOGIC;
 		I_reset : in STD_LOGIC;
 		I_execute : in STD_LOGIC;
-		I_store : in STD_LOGIC;
 		I_address : in STD_LOGIC_VECTOR (4 downto 0);
 		I_data : in STD_LOGIC_VECTOR (31 downto 0);
 
