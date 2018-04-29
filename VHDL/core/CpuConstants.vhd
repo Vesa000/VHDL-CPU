@@ -75,8 +75,13 @@ constant STATUS_LT: integer := 2;
 
 
 -- Memory mappings
-constant MEM_RAM_START: integer := 511;
-constant MEM_PROGRAM_START: integer := 511;
+constant MEM_RAM_END: integer := 65535;
+constant MEM_PROGRAM_START: integer := 0;
+
+constant MEM_UART_DATA: integer := 65536;
+constant MEM_UART_STATUS: integer := 65537;
+constant UART_AVAILABLE_BIT: integer := 1;
+constant UART_TXRDY_BIT: integer := 0;
 
 end cpu_constants;
 package body cpu_constants is

@@ -62,6 +62,14 @@ begin
 		R_condition <= I_instruction(31 downto 28);
 		R_operands <= I_instruction(22 downto 0);
 		
+		
+	end if;
+end process;
+
+process(all)
+begin
+	if(rising_edge(I_clk)) then
+	
 		--if cmp instruction
 		if(I_instruction(IFO_OPCODE_BEGIN downto IFO_OPCODE_END)=OPCODE_ALU and I_instruction(IFO_ALUINS_BEGIN downto IFO_ALUINS_END) = ALUCODE_CMP) then
 			R_cntr<="000";

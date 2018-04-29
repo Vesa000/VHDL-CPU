@@ -10,7 +10,8 @@ use work.cpu_constants.all;
 entity BlockRam is
 generic (
 	WIDTHA : integer := 32;
-	SIZEA : integer := 30000;
+	SIZEA : integer := 4000;
+	--SIZEA : integer := 40000;
 	ADDRWIDTHA : integer := 16;
 	WIDTHB : integer := 32;
 	SIZEB : integer := 30000;
@@ -24,8 +25,8 @@ port (
 	enB : in std_logic;
 	weA : in std_logic;
 	weB : in std_logic;
-	addrA : in std_logic_vector(ADDRWIDTHA-1 downto 0);
-	I_MemAddress : in std_logic_vector(31 downto 0);
+	addrA : in std_logic_vector(15 downto 0);
+	addrB : in std_logic_vector(31 downto 0);
 	diA : in std_logic_vector(31 downto 0);
 	diB : in std_logic_vector(31 downto 0);
 	doA : out std_logic_vector(31 downto 0);
@@ -57,8 +58,6 @@ signal readB : std_logic_vector(WIDTHB-1 downto 0):= (others => '0');
 signal regA  : std_logic_vector(WIDTHA-1 downto 0):= (others => '0');
 signal regB  : std_logic_vector(WIDTHB-1 downto 0):= (others => '0');
 
-signal addrB : std_logic_vector(WIDTHB-1 downto 0):= (others => '0');
-
 begin
 
 process (clkA,clkB)
@@ -68,18 +67,22 @@ begin
 			if weA = '1' then
 				ram(to_integer(unsigned(addrA))) <= diA;
 			end if;
-			readA <= ram(to_integer(unsigned(addrA)));
+			regA <= ram(to_integer(unsigned(addrA)));
+			--readA <= ram(to_integer(unsigned(addrA)));
 		end if;
-		regA <= readA;
+		--regA <= readA;
 	end if;
 	if rising_edge(clkB) then
 		if enB = '1' then
-			if weB = '1' then
+			if (weB = '1' and addrB < std_logic_vector(to_unsigned(MEM_RAM_END,32))) then
 				ram(to_integer(unsigned(addrB)))<= diB;
 			end if;
-			readB <= ram(to_integer(unsigned(addrB)));
+
+			if(addrB < std_logic_vector(to_unsigned(MEM_RAM_END,32))) then
+				regB <= ram(to_integer(unsigned(addrB)));
+			end if;
 		end if;
-		regB <= readB;
+		--regB <= readB;
 	end if;
 end process;
 
@@ -87,12 +90,6 @@ process(all)
 begin
 	doA <= regA;
 	doB <= regB;
-
-if(unsigned(I_MemAddress)>to_unsigned(MEM_RAM_START,32)) then
-		addrB <= STD_LOGIC_VECTOR(unsigned(I_MemAddress) + to_unsigned(MEM_RAM_START,32));
-	else
-		addrB<= (others => '0');
-end if;
 end process;
 
 end behavioral;

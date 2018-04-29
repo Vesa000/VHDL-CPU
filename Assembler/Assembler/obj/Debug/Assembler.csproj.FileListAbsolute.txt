@@ -22,3 +22,9 @@ C:\Users\Vesa\Documents\FPGA\VHDL-Processor\Assembler\Source\Assembler\bin\Debug
 C:\Users\Vesa\Documents\FPGA\VHDL-Processor\Assembler\Source\Assembler\obj\Debug\Assembler.csprojResolveAssemblyReference.cache
 C:\Users\Vesa\Documents\FPGA\VHDL-Processor\Assembler\Source\Assembler\obj\Debug\Assembler.exe
 C:\Users\Vesa\Documents\FPGA\VHDL-Processor\Assembler\Source\Assembler\obj\Debug\Assembler.pdb
+C:\Users\Vesa\Documents\FPGA\VHDL-Processor\Assembler\Assembler\bin\Debug\Assembler.exe.config
+C:\Users\Vesa\Documents\FPGA\VHDL-Processor\Assembler\Assembler\bin\Debug\Assembler.exe
+C:\Users\Vesa\Documents\FPGA\VHDL-Processor\Assembler\Assembler\bin\Debug\Assembler.pdb
+C:\Users\Vesa\Documents\FPGA\VHDL-Processor\Assembler\Assembler\obj\Debug\Assembler.csprojResolveAssemblyReference.cache
+C:\Users\Vesa\Documents\FPGA\VHDL-Processor\Assembler\Assembler\obj\Debug\Assembler.exe
+C:\Users\Vesa\Documents\FPGA\VHDL-Processor\Assembler\Assembler\obj\Debug\Assembler.pdb

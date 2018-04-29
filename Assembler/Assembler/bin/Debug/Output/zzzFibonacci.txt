@@ -1,0 +1,6 @@
+LDV
+LDV
+ALU
+MOV
+MOV
+JMP

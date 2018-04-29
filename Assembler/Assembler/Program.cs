@@ -13,7 +13,7 @@ namespace Assembler
         public static string[] moveOpcodes = { "LDV", "LDR", "STR", "MOV"};
         public static string[] jumpOpcodes = { "JMP", "BRA", "RET" };
         public static string[] arithmeticOpcodes = { "ADD", "SUB", "MUL", "DIV", "CMP", "CMPU", "SHL", "SHR", "AND", "OR", "INV", "XOR", "NAND", "NOR", "XNOR" };
-        public static string[] otherOpcodes = { "RX", "TXV", "TXR", "NOP", "HLT" };
+        public static string[] otherOpcodes = { "NOP", "HLT" };
 
         public static int conditionOffset = 28;
         public static int opcodeOffset = 23;
@@ -37,19 +37,14 @@ namespace Assembler
             #region Dictionaries
             Dictionary<string, int> opcodeDict = new Dictionary<string, int>
             {
-                { "LDV", 0 },
-                { "LDR", 1 },
-                { "STR", 2 },
-                { "MOV", 3 },
-                { "LDM", 4 },
-                { "STM", 5 },
-                { "JMP", 6 },
+                { "LDV", 1 },
+                { "LDR", 2 },
+                { "STR", 3 },
+                { "MOV", 4 },
+                { "JMP", 7 },
                 { "BRA", 8 },
-                { "RET", 10 },
-                { "ALU", 11 },
-                { "RX",  12 },
-                { "TXV", 13 },
-                { "TXR", 14 },
+                { "RET", 9 },
+                { "ALU", 10 },
                 { "NOP", 0  },
                 { "HLT", 31 }
             };
@@ -109,9 +104,7 @@ namespace Assembler
                     {
                         label = lines[i].Substring(0, lines[i].IndexOf(':'));
                     }
-
-
-
+                    
                     //Line is instruction
                     else if (Isinside(lines[i], InstructionOpcodes))
                     {
@@ -126,14 +119,14 @@ namespace Assembler
 
                         if (Isinside(lines[i], otherOpcodes))
                             instructions.Add(new Other(lines[i], label, i));
+
                         label = "";
                     }
                 }
 
                 //output hex
                 StreamWriter sw = new StreamWriter(outPath + "\\" + filePath.Substring(inputFolder.Length)+".data");
-                //sw.WriteLine("memory_initialization_radix=16;");
-                //sw.WriteLine("memory_initialization_vector=\n");
+                StreamWriter swText = new StreamWriter(outPath + "\\" + filePath.Substring(inputFolder.Length) + ".txt");
 
                 for (int i = 0; i < instructions.Count; i++)
                 {
@@ -145,12 +138,14 @@ namespace Assembler
                         str = Convert.ToString(instructions[i].Output(conditionDict, opcodeDict), 2).PadLeft(32, '0');
 
                     sw.WriteLine(str);
+                    swText.WriteLine(instructions[i].opcode);
                 }
                 for (int i = instructions.Count; i < ramSize; i++)
                 {
                     sw.WriteLine(Convert.ToString(0, 2).PadLeft(32,'0'));
                 }
                 sw.Close();
+                swText.Close();
             }
             Console.WriteLine("Done");
             Console.ReadKey();
@@ -159,7 +154,7 @@ namespace Assembler
         public static bool Isinside(string s, string[] strings)
         {
             string[] operands = s.Split("\t".ToCharArray());
-            if (operands.Count() > 2)
+            if (operands.Count() > 1)
             {
                 foreach (string str in strings)
                 {

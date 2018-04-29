@@ -30,8 +30,8 @@ namespace Assembler
             }
             if (opcode == "STR")
             {
-                address = int.Parse(operands[2]);
-                registerFrom = int.Parse(operands[3]);
+                address = int.Parse(operands[3]);
+                registerFrom = int.Parse(operands[2]);
             }
             if (opcode == "MOV")
             {

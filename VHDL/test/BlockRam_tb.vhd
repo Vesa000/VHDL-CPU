@@ -8,32 +8,34 @@ end;
 architecture bench of BlockRam_tb is
 
   component BlockRam
-      generic(
-          width     : integer:=32;
-          highAddr  : integer:=255
-      );
-      Port ( 
-             I_clk : in STD_LOGIC;
-             I_Aaddr : in STD_LOGIC_VECTOR (width-1 downto 0)     := (others => '0');
-             I_ADI : in STD_LOGIC_VECTOR (width-1 downto 0)       := (others => '0');
-             O_ADO : out STD_LOGIC_VECTOR (width-1 downto 0)      := (others => '0');
-             I_AWE : in STD_LOGIC                                 := '0';
-             I_Baddr : in STD_LOGIC_VECTOR (width-1 downto 0)     := (others => '0');
-             I_BDI : in STD_LOGIC_VECTOR (width-1 downto 0)       := (others => '0');
-             O_BDO : out STD_LOGIC_VECTOR (width-1 downto 0)      := (others => '0');
-             I_BWE : in STD_LOGIC                                 := '0'
-             );
+  port (
+	clkA : in std_logic;
+	clkB : in std_logic;
+	enA : in std_logic;
+	enB : in std_logic;
+	weA : in std_logic;
+	weB : in std_logic;
+	addrA : in std_logic_vector(15 downto 0);
+	I_MemAddress : in std_logic_vector(31 downto 0);
+	diA : in std_logic_vector(31 downto 0);
+	diB : in std_logic_vector(31 downto 0);
+	doA : out std_logic_vector(31 downto 0);
+	doB : out std_logic_vector(31 downto 0)
+	);
   end component;
-  
-  signal I_clk: STD_LOGIC;
-  signal I_Aaddr: STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
-  signal I_ADI: STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
-  signal O_ADO: STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
-  signal I_AWE: STD_LOGIC := '0';
-  signal I_Baddr: STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
-  signal I_BDI: STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
-  signal O_BDO: STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
-  signal I_BWE: STD_LOGIC := '0' ;
+
+  signal clkA: std_logic;
+  signal clkB: std_logic;
+  signal enA: std_logic;
+  signal enB: std_logic;
+  signal weA: std_logic;
+  signal weB: std_logic;
+  signal addrA: std_logic_vector(15 downto 0);
+  signal I_MemAddress: std_logic_vector(31 downto 0);
+  signal diA: std_logic_vector(31 downto 0);
+  signal diB: std_logic_vector(31 downto 0);
+  signal doA: std_logic_vector(31 downto 0);
+  signal doB: std_logic_vector(31 downto 0) ;
 
   constant clock_period: time := 10 ns;
   signal stop_the_clock: boolean;
@@ -41,39 +43,51 @@ architecture bench of BlockRam_tb is
 begin
 
   -- Insert values for generic parameters !!
-  uut: BlockRam generic map ( width    => 32,
-                              highAddr => 255 )
-                   port map ( I_clk    => I_clk,
-                              I_Aaddr  => I_Aaddr,
-                              I_ADI    => I_ADI,
-                              O_ADO    => O_ADO,
-                              I_AWE    => I_AWE,
-                              I_Baddr  => I_Baddr,
-                              I_BDI    => I_BDI,
-                              O_BDO    => O_BDO,
-                              I_BWE    => I_BWE );
+  uut: BlockRam port map ( 
+  							  clkA		   => clkA,
+							  clkB         => clkB,
+							  enA          => enA,
+							  enB          => enB,
+							  weA          => weA,
+							  weB          => weB,
+							  addrA        => addrA,
+							  I_MemAddress => I_MemAddress,
+							  diA          => diA,
+							  diB          => diB,
+							  doA          => doA,
+							  doB          => doB);
 
   stimulus: process
   begin
-  
-    -- Put initialisation code here
 
+  	enA <= '1';
 
-    -- Put test bench stimulus code here
+  	addrA <= "0000000000000000";
+    wait for clock_period*2;
 
-    stop_the_clock <= true;
-    wait;
+    addrA <= "0000000000000001";
+    wait for clock_period*2;
+
+    addrA <= "0000000000000010";
+    wait for clock_period*2;
+
+    addrA <= "0000000000000011";
+    wait for clock_period*2;
+
+    addrA <= "0000000000000100";
+    wait for clock_period*2;
+
+	stop_the_clock <= true;
+	wait;
   end process;
 
   clocking: process
   begin
-    while not stop_the_clock loop
-      I_clk <= '0', '1' after clock_period / 2;
-      wait for clock_period;
-    end loop;
-    wait;
+	while not stop_the_clock loop
+	  clkA <= '0', '1' after clock_period / 2;
+	  wait for clock_period;
+	end loop;
+	wait;
   end process;
 
 end;
-
-  
