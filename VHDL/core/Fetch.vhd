@@ -1,22 +1,21 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
 library work;
 use work.cpu_constants.all;
 use IEEE.NUMERIC_STD.ALL;
 
-entity Fetch is
-	Port ( I_clk : in STD_LOGIC;
-		   I_enable : in STD_LOGIC;
-		   I_pause : in STD_LOGIC;
-		   I_reset : in std_logic;
-		   I_instruction : in STD_LOGIC_VECTOR (31 downto 0);
-		   I_status : in STD_LOGIC_VECTOR (7 downto 0);
-		   O_execute : out STD_LOGIC;
-		   O_opcode : out STD_LOGIC_VECTOR (4 downto 0);
-		   O_operands : out STD_LOGIC_VECTOR (22 downto 0);
-		   O_pc : out STD_LOGIC_VECTOR (15 downto 0)
-		   );
+entity Fetch is Port (
+		I_clk : in STD_LOGIC;
+		I_enable : in STD_LOGIC;
+		I_pause : in STD_LOGIC;
+		I_reset : in std_logic;
+		I_instruction : in STD_LOGIC_VECTOR (31 downto 0);
+		I_status : in STD_LOGIC_VECTOR (7 downto 0);
+		O_execute : out STD_LOGIC;
+		O_opcode : out STD_LOGIC_VECTOR (4 downto 0);
+		O_operands : out STD_LOGIC_VECTOR (22 downto 0);
+		O_pc : out STD_LOGIC_VECTOR (15 downto 0)
+		);
 end Fetch;
 
 architecture Behavioral of Fetch is
@@ -31,28 +30,28 @@ signal R_cntr: std_logic_vector(2 downto 0):="000";
 signal R_cmpNotDone : STD_LOGIC:='0';
 
 component ProgramCounter port(
-		   I_clk : in STD_LOGIC;
-		   I_enable : in STD_LOGIC;
-		   I_pause : in STD_LOGIC;
-		   I_reset : in STD_LOGIC;
-		   I_execute : in STD_LOGIC;
-		   I_opcode : in STD_LOGIC_VECTOR (4 downto 0);
-		   I_operands : in STD_LOGIC_VECTOR (22 downto 0);
-		   O_pc : out STD_LOGIC_VECTOR (15 downto 0)
-		   );
+		I_clk : in STD_LOGIC;
+		I_enable : in STD_LOGIC;
+		I_pause : in STD_LOGIC;
+		I_reset : in STD_LOGIC;
+		I_execute : in STD_LOGIC;
+		I_opcode : in STD_LOGIC_VECTOR (4 downto 0);
+		I_operands : in STD_LOGIC_VECTOR (22 downto 0);
+		O_pc : out STD_LOGIC_VECTOR (15 downto 0)
+		);
 end component;
 
 begin
 
 PC: ProgramCounter port map(
-						I_clk => I_clk,
-						I_enable=> I_enable,
-						I_pause=>W_pauseClock,
-						I_reset=>I_reset,
-						I_execute => W_execute,
-						I_opcode=> R_opcode,
-						I_operands=> R_operands,
-						O_pc=> O_pc);
+		I_clk => I_clk,
+		I_enable=> I_enable,
+		I_pause=>W_pauseClock,
+		I_reset=>I_reset,
+		I_execute => W_execute,
+		I_opcode=> R_opcode,
+		I_operands=> R_operands,
+		O_pc=> O_pc);
 
 --register process
 process(all)
@@ -104,6 +103,7 @@ begin
 	end if;
 	
 	-- output
+	--if(R_cmpNotDone='1' and R_condition /= "0000") then
 	if(R_cmpNotDone='1' and not ((R_opcode = OPCODE_ALU) and (R_operands(IFO_ALUINS_BEGIN downto IFO_ALUINS_END) = ALUCODE_CMP))) then
 		O_execute<='0';
 		O_opcode<=(others =>'0');

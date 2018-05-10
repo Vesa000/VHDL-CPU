@@ -1,29 +1,18 @@
-----------------------------------------------------------------------------------
--- Project Name: 
--- Description: Constants for instruction forms, opcodes, conditional flags, etc.
--- 
--- Revision 0.01 - File Created
-----------------------------------------------------------------------------------
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
-
 package cpu_constants is
 
---constant ADDR_RESET:    std_logic_vector(15 downto 0) :=  X"0000";
---constant ADDR_INTVEC:   std_logic_vector(15 downto 0) :=  X"0008";
-
 -- Opcodes
-constant OPCODE_LDV:    std_logic_vector(4 downto 0)    :=  "00001";	-- Load value
-constant OPCODE_LDR:    std_logic_vector(4 downto 0)    :=  "00010";	-- Load ram
-constant OPCODE_STR:    std_logic_vector(4 downto 0)    :=  "00011";	-- Store register
-constant OPCODE_MOV:    std_logic_vector(4 downto 0)    :=  "00100";	-- Move register
-constant OPCODE_JMP:    std_logic_vector(4 downto 0)    :=  "00111";	-- Jump
-constant OPCODE_BRA:    std_logic_vector(4 downto 0)    :=  "01000";	-- Branch
-constant OPCODE_RET:    std_logic_vector(4 downto 0)    :=  "01001";	-- Return
-constant OPCODE_ALU:    std_logic_vector(4 downto 0)    :=  "01010";	-- Alu
-constant OPCODE_NOP:    std_logic_vector(4 downto 0)    :=  "00000";    -- No operation
-constant OPCODE_HLT:    std_logic_vector(4 downto 0)    :=  "11111";	-- halt 
+constant OPCODE_LDV: std_logic_vector(4 downto 0) :=  "00001";	-- Load value
+constant OPCODE_LDR: std_logic_vector(4 downto 0) :=  "00010";	-- Load ram
+constant OPCODE_STR: std_logic_vector(4 downto 0) :=  "00011";	-- Store register
+constant OPCODE_MOV: std_logic_vector(4 downto 0) :=  "00100";	-- Move register
+constant OPCODE_JMP: std_logic_vector(4 downto 0) :=  "00111";	-- Jump
+constant OPCODE_BRA: std_logic_vector(4 downto 0) :=  "01000";	-- Branch
+constant OPCODE_RET: std_logic_vector(4 downto 0) :=  "01001";	-- Return
+constant OPCODE_ALU: std_logic_vector(4 downto 0) :=  "01010";	-- Alu
+constant OPCODE_NOP: std_logic_vector(4 downto 0) :=  "00000";  -- No operation
+constant OPCODE_HLT: std_logic_vector(4 downto 0) :=  "11111";	-- halt 
 
 constant ALUCODE_ADD: std_logic_vector(3 downto 0) := "0000";
 constant ALUCODE_SUB: std_logic_vector(3 downto 0) := "0001";

@@ -54,36 +54,36 @@ begin
 
 	process (all)
 	begin
-		--read Status
-		if(I_memAddress = std_logic_vector(to_unsigned(MEM_UART_STATUS,32)) and I_memRead = '1') then
+		if(rising_edge(I_clk)) then
 
-			O_memReadData(31 downto 2) <= (others => '0');
-			O_memReadData(UART_AVAILABLE_BIT) <= rx_sig;
-			if(R_txSend = '1') then
-				O_memReadData(UART_TXRDY_BIT) <= '0';
-			else
-				O_memReadData(UART_TXRDY_BIT) <= tx_rdy;
+			--read Status
+			if(I_memAddress = std_logic_vector(to_unsigned(MEM_UART_STATUS,32)) and I_memRead = '1') then
+
+				O_memReadData(31 downto 2) <= (others => '0');
+				O_memReadData(UART_AVAILABLE_BIT) <= rx_sig;
+				if(R_txSend = '1') then
+					O_memReadData(UART_TXRDY_BIT) <= '0';
+				else
+					O_memReadData(UART_TXRDY_BIT) <= tx_rdy;
+				end if;
+
+
 			end if;
 
+			--read next
+			if(I_memAddress = std_logic_vector(to_unsigned(MEM_UART_DATA,32)) and I_memRead = '1') then
+				R_rxNext <='1';
+				O_memReadData(7 downto 0) <= R_rxData;
+			else
+				R_rxNext <='0';
+			end if;
 
-		end if;
-
-		--read next
-		if(I_memAddress = std_logic_vector(to_unsigned(MEM_UART_DATA,32)) and I_memRead = '1') then
-			R_rxNext <='1';
-			O_memReadData(7 downto 0) <= R_rxData;
-		else
-			R_rxNext <='0';
-		end if;
-
-		--send
-		if rising_edge(I_clk) then
+			--send
 			if(I_memAddress = std_logic_vector(to_unsigned(MEM_UART_DATA,32)) and I_memStore = '1') then
 				R_txSend <='1';
 				R_txData <= I_memStoreData(7 downto 0);
 			end if;
-
-			if(R_txSend='1' and tx_rdy='0') then
+				if(R_txSend='1' and tx_rdy='0') then
 				R_txSend <= '0';
 			end if;
 		end if;

@@ -3,8 +3,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 library work;
 use work.cpu_constants.all;
 
-entity Mem_WriteBack is
-	Port ( 
+entity Mem_WriteBack is Port ( 
 		I_clk : in STD_LOGIC;
 		I_enable : in STD_LOGIC;
 		I_reset : in STD_LOGIC;

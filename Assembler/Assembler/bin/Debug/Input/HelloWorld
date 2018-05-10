@@ -33,15 +33,18 @@ HELLOWORLD:
 PRINT:
 	LDR	65537	2		// Uart status register
 	LDV	1	3		// Uart Ready
+	LDV	3	4		// Uart Ready and Uart Available
+
 	CMP	2	3
+EQ	JMP	PRINTEND
+	CMP	2	4
 
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
+EQ	JMP	PRINTEND
+	
+	JMP	PRINT
 
-NEQ	JMP	PRINT
+
+PRINTEND:
 	
 	STR	1	65536		// Write to uart
 	RET

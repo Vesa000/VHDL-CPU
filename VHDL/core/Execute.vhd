@@ -5,8 +5,7 @@ library work;
 use work.cpu_constants.all;
 
 
-entity Execute is
-	Port ( 
+entity Execute is Port ( 
 		I_clk : in STD_LOGIC;
 		I_enable : in STD_LOGIC;
 		I_reset : in STD_LOGIC;

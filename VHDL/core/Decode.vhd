@@ -1,13 +1,9 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
 library work;
 use work.cpu_constants.all;
 
---use IEEE.NUMERIC_STD.ALL;
-
-entity Decode is
-	Port ( 
+entity Decode is Port ( 
 		I_clk : in STD_LOGIC;
 		I_enable : in STD_LOGIC;
 		I_reset : in STD_LOGIC;
@@ -32,7 +28,6 @@ signal R_opcode: STD_LOGIC_VECTOR (4 downto 0):="00000";
 begin
 process(all)
 begin
-
 	if(rising_edge(I_clk) and I_enable='1') then
 		R_operands<=I_operands;
 		R_execute<= I_execute;
