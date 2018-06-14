@@ -72,6 +72,28 @@ constant MEM_UART_STATUS: integer := 65537;
 constant UART_AVAILABLE_BIT: integer := 1;
 constant UART_TXRDY_BIT: integer := 0;
 
+
+constant MEM_IO_BUTTONS: integer := 65538;
+constant MEM_IO_SWITCHES: integer := 65539;
+constant MEM_IO_LEDS: integer := 65540;
+
+constant MEM_IO_RGB_0R: integer := 65541;
+constant MEM_IO_RGB_0G: integer := 65542;
+constant MEM_IO_RGB_0B: integer := 65543;
+
+constant MEM_IO_RGB_1R: integer := 65544;
+constant MEM_IO_RGB_1G: integer := 65545;
+constant MEM_IO_RGB_1B: integer := 65546;
+
+constant MEM_IO_RGB_2R: integer := 65547;
+constant MEM_IO_RGB_2G: integer := 65548;
+constant MEM_IO_RGB_2B: integer := 65549;
+
+constant MEM_IO_RGB_3R: integer := 65550;
+constant MEM_IO_RGB_3G: integer := 65551;
+constant MEM_IO_RGB_3B: integer := 65552;
+
+
 end cpu_constants;
 package body cpu_constants is
 end cpu_constants;
