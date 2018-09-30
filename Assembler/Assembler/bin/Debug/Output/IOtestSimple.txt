@@ -1,0 +1,3 @@
+LDR
+STR
+JMP

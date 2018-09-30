@@ -53,10 +53,8 @@ architecture Behavioral of IO is
 	signal R_CNTR : STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
 
 	type PWM_Value is array (0 to 31) of STD_LOGIC_VECTOR(31 downto 0);
-    signal PWM: PWM_Value := (others => X"00000000");
-
-    type PWM_bool is array (0 to 31) of STD_LOGIC;
-    signal PWM_Out: PWM_bool := (others => '0');
+    	signal PWM: PWM_Value := (others => X"00000000");
+    	signal PWM_Out : STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
 
 begin
 
@@ -85,7 +83,7 @@ begin
 				end if;
 
 				-- write leds
-				if(I_memAddress = std_logic_vector(to_unsigned(MEM_IO_BUTTONS,32))) then
+				if(I_memAddress = std_logic_vector(to_unsigned(MEM_IO_LEDS,32))) then
 					O_Led0 <= I_memStoreData(0);
 					O_Led1 <= I_memStoreData(1);
 					O_Led2 <= I_memStoreData(2);
@@ -131,16 +129,19 @@ begin
 				end if;
 
 				-- update PWM
-				R_CNTR <= R_CNTR + 1;
+				if(unsigned(R_CNTR)<1048576) then
+				R_CNTR <= STD_LOGIC_VECTOR(unsigned(R_CNTR) + 1);
+				else
+				R_CNTR <= STD_LOGIC_VECTOR(to_unsigned(0,32));
+				end if;
 
 				for i in 0 to 31 loop
-					if(unsigned(R_CNTR) < unsigned(PWM(i))
+					if(unsigned(R_CNTR) < unsigned(PWM(i))) then
 						PWM_Out(i) <= '1';
-        			else
+        				else
 						PWM_Out(i) <= '0';
-        			end if;
-      			end loop;
-      			
+        				end if;
+      				end loop;
 			end if;
 		end if;
 	end process;

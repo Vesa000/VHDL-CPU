@@ -12,7 +12,6 @@ namespace Assembler
         int address;
         int registerFrom;
         int registerTo;
-        int optionalExtra;
 
         public Move(string line, string inslabel, int linenumber):base(line,inslabel,linenumber)
         {
@@ -37,8 +36,6 @@ namespace Assembler
             {
                 registerFrom = int.Parse(operands[2]);
                 registerTo = int.Parse(operands[3]);
-                if(operands[4]!="")
-                    optionalExtra = int.Parse(operands[4]);
             }
         }
 
@@ -68,7 +65,6 @@ namespace Assembler
             {
                 output |= registerFrom << 18;
                 output |= registerTo << 13;
-                output |= optionalExtra << 8;
             }
             return output;
         }

@@ -1,0 +1,6 @@
+
+READINPUTS:
+	LDR	65539	13		// Read switches
+	STR	13	65540		// Output sw to leds
+//	STR	13	65536		// Output sw to UART
+	JMP	READINPUTS
