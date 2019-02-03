@@ -22,6 +22,7 @@ Instructions follow the format below:
 
 #### Conditions
 Conditions tell under which condition the instruction should be executed.
+
 |Value|Condition|Behavior|
 |------|-----------|--------|
 |0|ALW|Always execute|
@@ -35,6 +36,7 @@ Conditions tell under which condition the instruction should be executed.
 
 #### Memory Map
 Ram I/O and Uart are all mapped into memory and can be accessed with Load and Store instructions
+
 |Address|Location|
 |------|---------|
 |0-65535|Ram|
@@ -49,6 +51,7 @@ Ram I/O and Uart are all mapped into memory and can be accessed with Load and St
 
 #### ALU Instructions
 Alu instructions have Alu instruction field on bits 0-3 that determines which instruction is excecuted.
+
 |Value|Name|Behavior|
 |-----|----|--------|
 |0000|ADD|Register A + Register B into Register Q|
