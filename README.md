@@ -5,20 +5,23 @@ This is a 32bit processor for Arty A7 board.
 <p align="center">
 <img align="center" src="https://i.imgur.com/kyv1L7P.png">
 </p>
-The processor has 4 stage pipeline:
-- Fetch - reads the next instruction and passes it to Decode stage and moves PC according to instructions.
-- Decode - reads registers needed for the instruction.
-- Execute - Excecutes all instruction except for the jump instructions.
-- Write Back - Stores the values from Execute or memory into registers according to instruction.
+The processor has 4 stage pipeline:<br/>
+- Fetch - reads the next instruction and passes it to Decode stage and moves PC according to instructions.<br/>
+- Decode - reads registers needed for the instruction.<br/>
+- Execute - Excecutes all instruction except for the jump instructions.<br/>
+- Write Back - Stores the values from Execute or memory into registers according to instruction.<br/>
+
+The processor can excecute 1 instruction per clock cycle except for when conditional instruction comes directly after compare instruction.
+This will cause the instruction to wait so that the comparison can reach excecute stage and update compare registers.
 
 ### Machine instructions
 Instructions follow the format below:
 <p align="center">
 <img align="center" src="https://i.imgur.com/n77xAZo.png">
 </p>
- - Bits 28-31 tell the Execute Under which condition the instruction should be executed
- - Bits 23-27 tell which instruction should be executed
- - Bits 0-22 Hold instruction specific data for the execute step.
+ - Bits 28-31 tell the Execute Under which condition the instruction should be executed<br/>
+ - Bits 23-27 tell which instruction should be executed<br/>
+ - Bits 0-22 Hold instruction specific data for the execute step.<br/>
 
 #### Conditions
 Conditions tell under which condition the instruction should be executed.
